@@ -1,0 +1,207 @@
+
+<div class="space-y-8 animate-fade-in font-sans">
+  
+  <!-- Header -->
+  <div class="flex justify-between items-end">
+    <div>
+      <h2 class="text-3xl font-bold text-slate-800 dark:text-white tracking-tight">Genel Bakış</h2>
+      <p class="text-slate-500 dark:text-slate-400 mt-1 font-medium">Mağaza performansınızın anlık özeti.</p>
+    </div>
+    <div class="hidden md:block text-sm text-slate-400 font-medium">
+      Bugün: {{ currentDateStr }}
+    </div>
+  </div>
+
+  <!-- Stats Grid with Premium Gradients -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Card 1: Total Products -->
+    <div class="relative overflow-hidden p-6 rounded-2xl shadow-xl bg-gradient-to-br from-indigo-500 to-blue-600 text-white transform transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-500/30 group">
+      <div class="relative z-10 flex flex-col h-full justify-between">
+        <div class="flex justify-between items-start">
+           <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-white">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+             </svg>
+           </div>
+           <span class="text-xs font-bold bg-white/20 px-2 py-1 rounded text-white/90">+2 Bugün</span>
+        </div>
+        <div>
+           <h3 class="text-4xl font-bold mt-4 tracking-tight">{{ totalProducts }}</h3>
+           <p class="text-blue-100 font-medium text-sm mt-1 opacity-90">Toplam Ürün</p>
+        </div>
+      </div>
+      <!-- Decorative Circle -->
+      <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all duration-500"></div>
+    </div>
+
+    <!-- Card 2: Warning (Amber) -->
+    <div class="relative overflow-hidden p-6 rounded-2xl shadow-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white transform transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-orange-500/30 group">
+      <div class="relative z-10 flex flex-col h-full justify-between">
+        <div class="flex justify-between items-start">
+           <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-white">
+               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+             </svg>
+           </div>
+           @if (warningCount > 0) {
+             <span class="text-xs font-bold bg-white/20 px-2 py-1 rounded text-white/90 animate-pulse">Aksiyon Gerekli</span>
+           }
+        </div>
+        <div>
+           <h3 class="text-4xl font-bold mt-4 tracking-tight">{{ warningCount }}</h3>
+           <p class="text-amber-100 font-medium text-sm mt-1 opacity-90">Kritik Stok (< 7 Gün)</p>
+        </div>
+      </div>
+      <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all duration-500"></div>
+    </div>
+
+    <!-- Card 3: Expired (Red) -->
+    <div class="relative overflow-hidden p-6 rounded-2xl shadow-xl bg-gradient-to-br from-rose-500 to-red-600 text-white transform transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-rose-500/30 group">
+      <div class="relative z-10 flex flex-col h-full justify-between">
+        <div class="flex justify-between items-start">
+           <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-white">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+             </svg>
+           </div>
+           <span class="text-xs font-bold bg-white/20 px-2 py-1 rounded text-white/90">Kayıp</span>
+        </div>
+        <div>
+           <h3 class="text-4xl font-bold mt-4 tracking-tight">{{ expiredCount }}</h3>
+           <p class="text-rose-100 font-medium text-sm mt-1 opacity-90">SKT'si Geçen</p>
+        </div>
+      </div>
+      <div class="absolute left-0 bottom-0 w-full h-1 bg-white/20"></div>
+    </div>
+
+    <!-- Card 4: Value (Emerald) -->
+    <div class="relative overflow-hidden p-6 rounded-2xl shadow-xl bg-gradient-to-br from-emerald-400 to-teal-600 text-white transform transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-500/30 group">
+      <div class="relative z-10 flex flex-col h-full justify-between">
+        <div class="flex justify-between items-start">
+           <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-white">
+               <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+             </svg>
+           </div>
+        </div>
+        <div>
+           <h3 class="text-3xl font-bold mt-4 tracking-tight">{{ totalValueStr }}</h3>
+           <p class="text-emerald-100 font-medium text-sm mt-1 opacity-90">Toplam Stok Değeri</p>
+        </div>
+      </div>
+      <!-- Texture -->
+      <svg class="absolute right-0 bottom-0 opacity-10 w-24 h-24 text-white transform rotate-12" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
+    </div>
+  </div>
+
+  <!-- Quick Actions & Alert List -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Expired List -->
+    <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+      <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
+        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+          <span class="flex h-3 w-3 relative">
+             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+             <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+          </span>
+          Acil Aksiyon Gerektirenler
+        </h3>
+        <a routerLink="/products" class="text-sm text-emerald-600 dark:text-emerald-400 font-semibold hover:text-emerald-700 hover:underline flex items-center gap-1">
+          Tümünü Gör <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+        </a>
+      </div>
+      
+      <div class="flex-1 overflow-auto max-h-[400px]">
+        @if (expiredCount === 0) {
+          <div class="flex flex-col items-center justify-center h-64 text-slate-400 dark:text-slate-500">
+            <div class="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-full mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-emerald-500">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p class="font-medium">Harika! SKT'si geçen ürün bulunmuyor.</p>
+          </div>
+        } @else {
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">
+              <tr>
+                <th class="px-6 py-4 font-semibold">Ürün Adı</th>
+                <th class="px-6 py-4 font-semibold">Barkod</th>
+                <th class="px-6 py-4 font-semibold">SKT</th>
+                <th class="px-6 py-4 font-semibold text-right">Adet</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+              @for (product of inventory.expiredProducts(); track product.id) {
+                <tr class="hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors group">
+                  <td class="px-6 py-4 font-medium text-slate-800 dark:text-slate-200">
+                    <div class="flex items-center gap-2">
+                       @if (product.image) {
+                         <img [src]="product.image" class="w-8 h-8 rounded object-cover border border-slate-200 dark:border-slate-700">
+                       }
+                       {{ product.name }}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-slate-500 dark:text-slate-400 font-mono text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded w-max">
+                    {{ product.barcode }}
+                  </td>
+                  <td class="px-6 py-4 text-red-600 dark:text-red-400 font-bold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                    {{ formatDate(product.expiryDate) }}
+                  </td>
+                  <td class="px-6 py-4 text-right dark:text-slate-300 font-mono">{{ product.quantity }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+    </div>
+
+    <!-- Approaching Expiry Feed -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+      <div class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+          Yaklaşanlar (< 7 Gün)
+        </h3>
+      </div>
+      
+      <div class="flex-1 overflow-auto max-h-[400px]">
+        @if (warningCount === 0) {
+          <div class="flex flex-col items-center justify-center h-full p-6 text-center text-slate-400 dark:text-slate-500">
+             <p>Yakın zamanda süresi dolacak ürün yok.</p>
+          </div>
+        } @else {
+          <div class="divide-y divide-slate-100 dark:divide-slate-800">
+            @for (product of inventory.warningProducts(); track product.id) {
+              <div class="p-5 hover:bg-amber-50 dark:hover:bg-amber-900/10 transition-all cursor-default">
+                <div class="flex justify-between items-start mb-2">
+                  <div class="flex items-center gap-3">
+                     @if (product.image) {
+                         <img [src]="product.image" class="w-10 h-10 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shadow-sm">
+                     }
+                     <h4 class="font-bold text-slate-800 dark:text-slate-200 text-sm">{{ product.name }}</h4>
+                  </div>
+                  <span class="text-[10px] font-bold px-2 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800 flex-shrink-0">
+                    {{ inventory.getDaysRemaining(product.expiryDate) }} Gün
+                  </span>
+                </div>
+                <div class="flex justify-between text-xs text-slate-500 dark:text-slate-400 pl-[3.25rem]">
+                  <span class="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">{{ product.category }}</span>
+                  <span class="font-mono">Stok: {{ product.quantity }}</span>
+                </div>
+                <!-- Mini Progress Bar -->
+                <div class="mt-3 h-1 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                   <div class="h-full bg-amber-400" [style.width.%]="(7 - inventory.getDaysRemaining(product.expiryDate)) / 7 * 100"></div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

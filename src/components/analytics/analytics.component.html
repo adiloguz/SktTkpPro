@@ -1,0 +1,111 @@
+
+<div class="space-y-8 animate-fade-in font-sans">
+  <div>
+    <h2 class="text-3xl font-bold text-slate-800 dark:text-white">Detaylı Analiz</h2>
+    <p class="text-slate-500 dark:text-slate-400 mt-1">Hafif ve hızlı analiz araçları.</p>
+  </div>
+
+  @if (inventory.products().length === 0) {
+    <!-- Empty State -->
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-12 text-center flex flex-col items-center justify-center h-64">
+      <div class="bg-slate-100 dark:bg-slate-800 p-4 rounded-full mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-slate-400">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold text-slate-800 dark:text-white">Henüz Veri Yok</h3>
+      <p class="text-slate-500 dark:text-slate-400 max-w-sm mt-2">Analizleri görebilmek için önce ürün eklemeye başlayın.</p>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <!-- CSS Bar Chart (Stock Value by Category) -->
+      <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col h-[400px]">
+        <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-emerald-500">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+          </svg>
+          Kategorilere Göre Stok Değeri
+        </h3>
+        
+        <div class="flex-1 flex items-end gap-3 pb-8 overflow-x-auto custom-scrollbar">
+          @for (item of barChartData(); track item.category) {
+            <div class="group relative flex flex-col justify-end items-center flex-1 min-w-[60px] h-full">
+              <!-- Value Tooltip on Hover -->
+              <div class="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] px-2 py-1 rounded shadow-lg pointer-events-none whitespace-nowrap z-10">
+                ₺{{ item.value.toLocaleString() }}
+              </div>
+              
+              <!-- Value Label -->
+              <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1 group-hover:text-emerald-500 transition-colors">
+                ₺{{ item.value >= 1000 ? (item.value / 1000).toFixed(1) + 'k' : item.value }}
+              </span>
+
+              <!-- Bar -->
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-t-lg relative overflow-hidden h-full max-h-[220px]">
+                <div 
+                  class="absolute bottom-0 left-0 w-full bg-emerald-500 group-hover:bg-emerald-400 transition-all duration-500 ease-out rounded-t-lg"
+                  [style.height.%]="item.heightPercent"
+                ></div>
+              </div>
+
+              <!-- Category Label (Rotated for space) -->
+              <span class="absolute -bottom-8 text-[10px] font-medium text-slate-500 dark:text-slate-400 rotate-0 w-full text-center truncate px-1" title="{{ item.category }}">
+                {{ item.category }}
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- CSS Donut Chart (Status) -->
+      <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 h-[400px]">
+        <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-emerald-500">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
+          </svg>
+          SKT Durum Dağılımı
+        </h3>
+        
+        @if (pieChartStats(); as stats) {
+          <div class="flex flex-col items-center justify-center h-full pb-8">
+            <!-- Donut -->
+            <div class="relative w-48 h-48 rounded-full shadow-inner" [style.background]="stats.gradient">
+              <!-- Inner White Circle for Donut Effect -->
+              <div class="absolute inset-4 bg-white dark:bg-slate-900 rounded-full flex flex-col items-center justify-center shadow-sm">
+                <span class="text-3xl font-bold text-slate-800 dark:text-white">{{ stats.total }}</span>
+                <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Toplam Ürün</span>
+              </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="flex gap-4 mt-8">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+                <div class="flex flex-col">
+                  <span class="text-xs font-bold text-slate-700 dark:text-slate-200">Uygun</span>
+                  <span class="text-[10px] text-slate-400">{{ stats.counts.good }} adet</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50"></span>
+                 <div class="flex flex-col">
+                  <span class="text-xs font-bold text-slate-700 dark:text-slate-200">Riskli</span>
+                  <span class="text-[10px] text-slate-400">{{ stats.counts.warning }} adet</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-red-500 shadow-sm shadow-red-500/50"></span>
+                 <div class="flex flex-col">
+                  <span class="text-xs font-bold text-slate-700 dark:text-slate-200">İmhalık</span>
+                  <span class="text-[10px] text-slate-400">{{ stats.counts.expired }} adet</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

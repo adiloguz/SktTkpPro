@@ -1,0 +1,187 @@
+
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
+  <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all scale-100 flex flex-col max-h-[90vh] border border-slate-200 dark:border-slate-800">
+    
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900 shrink-0">
+      <h3 class="text-lg font-bold text-slate-800 dark:text-white">
+        {{ isEdit ? 'Ürün Düzenle' : 'Yeni Ürün Ekle' }}
+      </h3>
+      <button (click)="cancel()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Form Content -->
+    <div class="overflow-y-auto p-6">
+      <form [formGroup]="form" (ngSubmit)="save()" class="space-y-5">
+        
+        <!-- Image Upload Section -->
+        <div class="flex flex-col items-center justify-center">
+           @if (previewImage()) {
+             <div class="relative group">
+               <img [src]="previewImage()" class="w-32 h-32 object-cover rounded-xl shadow-md border border-slate-200 dark:border-slate-700">
+               <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center gap-2">
+                  <label class="cursor-pointer p-2 bg-white/20 text-white rounded-full hover:bg-white/30 backdrop-blur-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                    </svg>
+                    <input type="file" accept="image/*" class="hidden" (change)="onFileSelected($event)">
+                  </label>
+                  <button type="button" (click)="removeImage()" class="p-2 bg-red-500/80 text-white rounded-full hover:bg-red-600 backdrop-blur-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                  </button>
+               </div>
+             </div>
+           } @else {
+             <label class="w-full h-32 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-emerald-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all text-slate-400 dark:text-slate-500 hover:text-emerald-500">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 mb-2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                </svg>
+                <span class="text-sm font-medium">Ürün Görseli Ekle</span>
+                <input type="file" accept="image/*" class="hidden" (change)="onFileSelected($event)">
+             </label>
+           }
+        </div>
+
+        <!-- Row 1: Barcode Scanner -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-1 md:col-span-1">
+            <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Barkod</label>
+            <div class="flex gap-2">
+              <input type="text" formControlName="barcode" 
+                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-mono"
+                placeholder="Barkod..."
+              >
+              <button type="button" (click)="startScanner()" class="bg-slate-800 dark:bg-slate-700 text-white p-2 rounded-lg hover:bg-slate-700 dark:hover:bg-slate-600 transition-colors flex-shrink-0" title="Barkod Tara">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75zM16.5 19.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75z" />
+                </svg>
+              </button>
+            </div>
+            @if (form.get('barcode')?.invalid && form.get('barcode')?.touched) {
+              <p class="text-xs text-red-500">Barkod zorunludur.</p>
+            }
+          </div>
+          
+          <div class="space-y-1 md:col-span-1">
+            <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Kategori</label>
+            <select formControlName="category" 
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+            >
+              @for (cat of categories; track cat) {
+                <option [value]="cat">{{ cat }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="space-y-1">
+          <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Ürün Adı</label>
+          <input type="text" formControlName="name" 
+            class="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+            placeholder="Örn: Tam Yağlı Süt"
+          >
+          @if (form.get('name')?.invalid && form.get('name')?.touched) {
+            <p class="text-xs text-red-500">Ürün adı en az 3 karakter olmalıdır.</p>
+          }
+        </div>
+
+        <!-- Row 3 -->
+        <div class="space-y-1">
+          <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Tedarikçi</label>
+          <input type="text" formControlName="supplier" 
+            class="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+            placeholder="Örn: Pınar A.Ş."
+          >
+        </div>
+
+        <!-- Row 4 -->
+        <div class="space-y-1">
+          <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Son Kullanma Tarihi (SKT)</label>
+          <input type="date" formControlName="expiryDate" 
+            class="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+          >
+          @if (form.get('expiryDate')?.invalid && form.get('expiryDate')?.touched) {
+            <p class="text-xs text-red-500">Geçerli bir tarih giriniz.</p>
+          }
+        </div>
+
+        <!-- Row 5 -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Stok Adedi</label>
+            <input type="number" formControlName="quantity" 
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+              min="1"
+            >
+          </div>
+          <div class="space-y-1">
+            <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Birim Fiyat (₺)</label>
+            <input type="number" formControlName="price" 
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+              min="0" step="0.5"
+            >
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="pt-4 flex items-center justify-end gap-3">
+          <button type="button" (click)="cancel()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg font-medium transition-colors">
+            İptal
+          </button>
+          <button type="submit" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium shadow-lg shadow-emerald-200 dark:shadow-none transition-all">
+            {{ isEdit ? 'Güncelle' : 'Kaydet' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Full Screen Scanner Overlay -->
+  @if (isScanning()) {
+    <div class="fixed inset-0 z-[60] bg-black flex flex-col">
+      
+      <!-- Scanner Header -->
+      <div class="p-4 flex justify-between items-center bg-black/50 absolute top-0 left-0 right-0 z-10">
+        <span class="text-white font-bold text-lg drop-shadow-md">Barkodu Hizalayın</span>
+        <button (click)="stopScanner()" class="text-white bg-white/20 p-2 rounded-full hover:bg-white/30 backdrop-blur">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Scanner Viewport -->
+      <div id="interactive" class="viewport flex-1 relative overflow-hidden bg-black">
+        <!-- Quagga will inject video here -->
+        
+        <!-- Guide Overlay -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+          <div class="w-64 h-40 border-2 border-emerald-500 rounded-lg relative shadow-[0_0_0_9999px_rgba(0,0,0,0.5)]">
+            <div class="absolute top-1/2 left-0 w-full h-0.5 bg-red-500/50"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scanner Footer / Error -->
+      @if (scanError()) {
+        <div class="p-4 bg-red-600 text-white text-center absolute bottom-0 w-full z-10">
+          {{ scanError() }}
+        </div>
+      } @else {
+        <div class="p-6 text-center text-white/70 text-sm absolute bottom-0 w-full z-10 bg-gradient-to-t from-black/80 to-transparent">
+          Kamerayı barkoda sabit tutun.
+        </div>
+      }
+    </div>
+  }
+
+</div>

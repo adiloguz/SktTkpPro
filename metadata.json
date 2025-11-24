@@ -1,0 +1,7 @@
+{
+  "name": "MarketSKT - Stok Takibi",
+  "description": "Marketler için gelişmiş Son Kullanma Tarihi (SKT) ve stok takip sistemi. AI içermez, tamamen manuel kontrol ve analiz sağlar.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
